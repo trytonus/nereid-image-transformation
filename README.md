@@ -4,11 +4,11 @@ Nereid Image Transformation Module
 This module works as a dynamic image resizing addon for the statifc file
 functionality in Nereid.
 
-.. image:: https://travis-ci.org/openlabs/nereid-image-transformation.png?branch=develop
-  :target: https://travis-ci.org/openlabs/nereid-image-transformation
-
-.. image:: https://coveralls.io/repos/openlabs/nereid-image-transformation/badge.png
-  :target: https://coveralls.io/r/openlabs/nereid-image-transformation
+[![Build Status](https://travis-ci.org/openlabs/nereid-image-transformation.svg?branch=develop)](https://travis-ci.org/openlabs/nereid-image-transformation)
+[![Downloads](https://pypip.in/download/trytond_nereid-image-transformation/badge.svg)](https://pypi.python.org/pypi/trytond_nereid-image-transformation/)
+[![Latest Version](https://pypip.in/version/trytond_nereid-image-transformation/badge.svg)](https://pypi.python.org/pypi/trytond_nereid-image-transformation/)
+[![Development Status](https://pypip.in/status/trytond_nereid-image-transformation/badge.svg)](https://pypi.python.org/pypi/trytond_nereid-image-transformation/)
+[![Coverage Status](https://coveralls.io/repos/openlabs/nereid-image-transformation/badge.svg?branch=develop)](https://coveralls.io/r/openlabs/nereid-image-transformation?branch=develop)
 
 How to use
 ----------
@@ -32,15 +32,9 @@ your web server (apache, nginx) to speed up delivery of images.
 Examples
 --------
 
-
-::
-
     {{ product.large_image.transform_command().thumbnail(120, 120).resize(100, 100) }}
 
 
 Using the above in a template should result in the following URL:
-
-
-::
 
     /en_US/static-file-transform/1/thumbnail,w_120,h_120,m_n/resize,w_100,h_100,m_n.png
