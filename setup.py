@@ -67,7 +67,7 @@ setup(
     name='trytond_%s' % module_name,
     version=info.get('version', '0.0.1'),
     description='Nereid Dynamic Image Resizing and transformation module',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author="Openlabs Technologies and Consulting (P) Ltd.",
     url="http://openlabs.co.in",
     download_url="https://github.com/openlabs/"
