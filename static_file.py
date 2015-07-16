@@ -217,7 +217,8 @@ class NereidStaticFile:
 
         for command in commands.split('/'):
             operation, params = parse_command(command)
-            assert operation in self.allowed_operations
+            if operation not in self.allowed_operations:
+                abort(404)
             image_file = getattr(self, operation)(image_file, **params)
 
         image_file.save(filename)
