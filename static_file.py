@@ -138,14 +138,15 @@ class StaticFileTransformationCommand(TransformationCommand):
     urls.
 
     """
-    def __init__(self, static_file, extension='png', commands=None):
+    def __init__(self, static_file, extension=None, commands=None):
         """
         :param static_file: ID of static_file or Active Record
         :param extension: File extension to use
         :param commands: A list of commands (optional)
         """
         self.static_file = static_file
-        self.extension = extension
+        self.extension = extension or \
+            os.path.splitext(static_file.name)[1][1:] or 'png'
         super(StaticFileTransformationCommand, self).__init__(commands)
 
     def __html__(self):
