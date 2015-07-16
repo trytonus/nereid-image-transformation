@@ -39,7 +39,7 @@
         <field name="arch" type="xml">
             <![CDATA[
                 <data>
-                    <xpath expr="/tree/field[@name='folder_name']"
+                    <xpath expr="/tree/field[@name='name']"
                             position="after">
                         <field name="s3_use_bucket"/>
                         <field name="s3_bucket_name"/>
