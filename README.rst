@@ -1,14 +1,23 @@
 Nereid Image Transformation Module
 ==================================
 
-This module works as a dynamic image resizing addon for the statifc file
+This module works as a dynamic image resizing addon for the static file
 functionality in Nereid.
 
-.. image:: https://travis-ci.org/openlabs/nereid-image-transformation.png?branch=develop
-  :target: https://travis-ci.org/openlabs/nereid-image-transformation
-
-.. image:: https://coveralls.io/repos/openlabs/nereid-image-transformation/badge.png
-  :target: https://coveralls.io/r/openlabs/nereid-image-transformation
+.. image:: https://travis-ci.org/openlabs/nereid-image-transformation.svg?branch=develop
+    :target: https://travis-ci.org/openlabs/nereid-image-transformation
+    :alt: Build Status 
+.. image:: https://pypip.in/download/trytond_nereid-image-transformation/badge.svg
+    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
+    :alt: Downloads
+.. image:: https://pypip.in/version/trytond_nereid-image-transformation/badge.svg
+    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
+    :alt: Latest Version
+.. image:: https://pypip.in/status/trytond_nereid-image-transformation/badge.svg
+    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
+    :alt: Development Status
+.. image:: https://coveralls.io/repos/openlabs/nereid-image-transformation/badge.svg?branch=develop
+    :target: https://coveralls.io/r/openlabs/nereid-image-transformation?branch=develop
 
 How to use
 ----------
@@ -32,14 +41,11 @@ your web server (apache, nginx) to speed up delivery of images.
 Examples
 --------
 
-
 ::
 
     {{ product.large_image.transform_command().thumbnail(120, 120).resize(100, 100) }}
 
-
 Using the above in a template should result in the following URL:
-
 
 ::
 
