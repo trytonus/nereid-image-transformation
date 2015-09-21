@@ -10,7 +10,9 @@ from urllib import unquote
 from datetime import datetime
 
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import POOL, USER, DB_NAME, CONTEXT
+from trytond.tests.test_tryton import (
+    POOL, USER, DB_NAME, CONTEXT, ModuleTestCase
+)
 from trytond.transaction import Transaction
 from trytond.config import config
 from nereid.testing import NereidTestCase
@@ -22,7 +24,9 @@ config.set('email', 'from', 'from@xyz.com')
 config.set('database', 'path', '/tmp/temp_tryton_data/')
 
 
-class TestStaticFile(NereidTestCase):
+class TestStaticFile(NereidTestCase, ModuleTestCase):
+
+    module = 'nereid_image_transformation'
 
     def setUp(self):
         trytond.tests.test_tryton.install_module('nereid_image_transformation')
