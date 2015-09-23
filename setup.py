@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    setup
-
-    :copyright: (c) 2013-2015 by Openlabs Technologies & Consulting (P) Limited
-    :license: BSD, see LICENSE for more details.
-"""
 import os
 import sys
 import unittest
@@ -68,10 +62,8 @@ setup(
     version=info.get('version', '0.0.1'),
     description='Nereid Dynamic Image Resizing and transformation module',
     long_description=open('README.rst').read(),
-    author="Openlabs Technologies and Consulting (P) Ltd.",
-    url="http://openlabs.co.in",
-    download_url="https://github.com/openlabs/"
-        "trytond-nereid-image-transformation",
+    author="Fulfil.IO",
+    url="https://www.fulfil.io",
     package_dir={'trytond.modules.%s' % module_name: '.'},
     packages=[
         'trytond.modules.%s' % module_name,
