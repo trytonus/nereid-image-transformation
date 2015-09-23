@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    test_static_file
-
-    Test the static file feature of nereid
-
-    :copyright: (c) 2013-2015 by Openlabs Technologies & Consulting (P) LTD
-    :license: BSD, see LICENSE for more details.
-"""
 import os
 import time
 import unittest

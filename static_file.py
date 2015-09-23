@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-    static_file
-
-    Static File
-
-    :copyright: (c) 2013-2014 by Openlabs Technologies & Consulting (P) Limited
-    :license: BSD, see LICENSE for more details.
-"""
 import os
 from io import BytesIO
 from datetime import datetime
@@ -138,14 +130,15 @@ class StaticFileTransformationCommand(TransformationCommand):
     urls.
 
     """
-    def __init__(self, static_file, extension='png', commands=None):
+    def __init__(self, static_file, extension=None, commands=None):
         """
         :param static_file: ID of static_file or Active Record
         :param extension: File extension to use
         :param commands: A list of commands (optional)
         """
         self.static_file = static_file
-        self.extension = extension
+        self.extension = extension or \
+            os.path.splitext(static_file.name)[1][1:] or 'png'
         super(StaticFileTransformationCommand, self).__init__(commands)
 
     def __html__(self):
@@ -217,7 +210,8 @@ class NereidStaticFile:
 
         for command in commands.split('/'):
             operation, params = parse_command(command)
-            assert operation in self.allowed_operations
+            if operation not in self.allowed_operations:
+                abort(404)
             image_file = getattr(self, operation)(image_file, **params)
 
         image_file.save(filename)

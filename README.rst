@@ -4,21 +4,6 @@ Nereid Image Transformation Module
 This module works as a dynamic image resizing addon for the static file
 functionality in Nereid.
 
-.. image:: https://travis-ci.org/openlabs/nereid-image-transformation.svg?branch=develop
-    :target: https://travis-ci.org/openlabs/nereid-image-transformation
-    :alt: Build Status 
-.. image:: https://pypip.in/download/trytond_nereid-image-transformation/badge.svg
-    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
-    :alt: Downloads
-.. image:: https://pypip.in/version/trytond_nereid-image-transformation/badge.svg
-    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
-    :alt: Latest Version
-.. image:: https://pypip.in/status/trytond_nereid-image-transformation/badge.svg
-    :target: https://pypi.python.org/pypi/trytond_nereid-image-transformation/
-    :alt: Development Status
-.. image:: https://coveralls.io/repos/openlabs/nereid-image-transformation/badge.svg?branch=develop
-    :target: https://coveralls.io/r/openlabs/nereid-image-transformation?branch=develop
-
 How to use
 ----------
 
