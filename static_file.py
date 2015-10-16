@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import mimetypes
 from io import BytesIO
 from datetime import datetime
 from urllib2 import unquote
@@ -250,6 +251,9 @@ class NereidStaticFile:
             self._transform_static_file(commands, extension, filename)
 
         rv = send_file(filename)
+        rv.headers['Content-Type'] = mimetypes.guess_type(
+            'something.%s' % extension
+        )[0]
         rv.headers['Cache-Control'] = 'public, max-age=%d' % 86400
         return rv
 
