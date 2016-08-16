@@ -226,7 +226,7 @@ class NereidStaticFile:
         :param extension: The image format to use
         """
         tmp_folder = os.path.join(
-            '/tmp/nereid/', Transaction().cursor.dbname, str(self.id)
+            '/tmp/nereid/', Transaction().database.name, str(self.id)
         )
 
         try:
