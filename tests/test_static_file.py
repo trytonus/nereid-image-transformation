@@ -11,7 +11,7 @@ from datetime import datetime
 
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import (
-    POOL, USER, DB_NAME, CONTEXT, ModuleTestCase
+    POOL, DB_NAME, USER, ModuleTestCase, with_transaction
 )
 from trytond.transaction import Transaction
 from trytond.config import config
@@ -132,173 +132,172 @@ class TestStaticFile(NereidTestCase, ModuleTestCase):
             'file_binary': file_buffer,
         }])[0]
 
+    @with_transaction()
     def test_0010_static_file_url(self):
-        with Transaction().start(DB_NAME, USER, CONTEXT):
-            self.setup_defaults()
+        self.setup_defaults()
 
-            file_buffer = buffer('test-content')
-            file = self.create_static_file(file_buffer)
-            self.assertFalse(file.url)
+        file_buffer = buffer('test-content')
+        file = self.create_static_file(file_buffer)
+        self.assertFalse(file.url)
 
-            app = self.get_app()
-            static_file_obj = self.static_file_obj
+        app = self.get_app()
+        static_file_obj = self.static_file_obj
 
-            with app.test_request_context('/'):
-                rv = render_template(
-                    'home.jinja',
-                    static_file_obj=static_file_obj,
-                    static_file_id=file.id,
-                )
-                self.assertTrue(
-                    '/static-file-transform/1/'
-                    'thumbnail,w_120,h_120,m_n/'
-                    'resize,w_100,h_100,m_n.png'
-                    in unquote(unicode(rv))
-                )
+        with app.test_request_context('/'):
+            rv = render_template(
+                'home.jinja',
+                static_file_obj=static_file_obj,
+                static_file_id=file.id,
+            )
+            self.assertTrue(
+                '/static-file-transform/1/'
+                'thumbnail,w_120,h_120,m_n/'
+                'resize,w_100,h_100,m_n.png'
+                in unquote(unicode(rv))
+            )
 
+    @with_transaction()
     def test_0015_markup_test(self):
         """
         Tests that Markup wraps the URL.
         """
-        with Transaction().start(DB_NAME, USER, CONTEXT):
-            self.setup_defaults()
+        self.setup_defaults()
 
-            file_buffer = buffer('test-content2')
-            file = self.create_static_file(file_buffer)
-            self.assertFalse(file.url)
+        file_buffer = buffer('test-content2')
+        file = self.create_static_file(file_buffer)
+        self.assertFalse(file.url)
 
-            app = self.get_app()
-            static_file_command = file.transform_command()
+        app = self.get_app()
+        static_file_command = file.transform_command()
 
-            with app.test_request_context('/'):
-                self.assertTrue(isinstance(
-                    static_file_command.__html__(),
-                    Markup)
-                )
+        with app.test_request_context('/'):
+            self.assertTrue(isinstance(
+                static_file_command.__html__(),
+                Markup)
+            )
 
+    @with_transaction()
     def test_0020_quoted_url(self):
         """
         Test that quoted urls work properly.
         """
-        with Transaction().start(DB_NAME, USER, CONTEXT):
-            self.setup_defaults()
-            app = self.get_app()
+        self.setup_defaults()
+        app = self.get_app()
 
-            img_file = BytesIO()
-            img = Image.new("RGB", (100, 100), "black")
-            img.save(img_file, 'png')
+        img_file = BytesIO()
+        img = Image.new("RGB", (100, 100), "black")
+        img.save(img_file, 'png')
 
-            img_file.seek(0)
-            file = self.create_static_file(buffer(img_file.read()))
+        img_file.seek(0)
+        file = self.create_static_file(buffer(img_file.read()))
 
-            self.assertFalse(file.url)
+        self.assertFalse(file.url)
 
-            with app.test_client() as c:
-                rv = c.get(
-                    '/static-file-transform/{0}/thumbnail'
-                    '%2Cw_300%2Ch_300%2Cm_a.png'.format(file.id)
-                )
-                self.assertEqual(rv.status_code, 200)
-                img = Image.open(cStringIO.StringIO(rv.data))
-                # Assert if white
-                self.assertEqual(img.getpixel((0, 0)), (0, 0, 0))
+        with app.test_client() as c:
+            rv = c.get(
+                '/static-file-transform/{0}/thumbnail'
+                '%2Cw_300%2Ch_300%2Cm_a.png'.format(file.id)
+            )
+            self.assertEqual(rv.status_code, 200)
+            img = Image.open(cStringIO.StringIO(rv.data))
+            # Assert if white
+            self.assertEqual(img.getpixel((0, 0)), (0, 0, 0))
 
-                # Improper URL won't work
-                rv = c.get(
-                    '/static-file-transform/{0}/'
-                    'thumbnail%25252Cw_300%25252Ch_300%25252Cm_a.png'.
-                    format(file.id)
-                )
-                self.assertTrue(rv.status_code, 404)
+            # Improper URL won't work
+            rv = c.get(
+                '/static-file-transform/{0}/'
+                'thumbnail%25252Cw_300%25252Ch_300%25252Cm_a.png'.
+                format(file.id)
+            )
+            self.assertTrue(rv.status_code, 404)
 
+    @with_transaction()
     def test_0030_transform_static_file(self):
-        with Transaction().start(DB_NAME, USER, CONTEXT):
-            self.setup_defaults()
+        self.setup_defaults()
 
-            img_file = BytesIO()
-            img = Image.new("RGB", (100, 100), "white")
-            img.save(img_file, 'png')
+        img_file = BytesIO()
+        img = Image.new("RGB", (100, 100), "white")
+        img.save(img_file, 'png')
 
-            img_file.seek(0)
-            file = self.create_static_file(buffer(img_file.read()))
+        img_file.seek(0)
+        file = self.create_static_file(buffer(img_file.read()))
 
-            self.assertFalse(file.url)
+        self.assertFalse(file.url)
 
-            app = self.get_app()
+        app = self.get_app()
 
-            with app.test_client() as c:
-                rv = c.get(
-                    '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
-                    'resize,w_100,h_100,m_n.png' % file.id
-                )
-                self.assertEqual(rv.status_code, 200)
-                img = Image.open(cStringIO.StringIO(rv.data))
-                # Assert if white
-                self.assertEqual(img.getpixel((0, 0)), (255, 255, 255))
+        with app.test_client() as c:
+            rv = c.get(
+                '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
+                'resize,w_100,h_100,m_n.png' % file.id
+            )
+            self.assertEqual(rv.status_code, 200)
+            img = Image.open(cStringIO.StringIO(rv.data))
+            # Assert if white
+            self.assertEqual(img.getpixel((0, 0)), (255, 255, 255))
 
-            # Save temp image file datetime
-            temp_image_time = datetime.fromtimestamp(os.path.getmtime(
+        # Save temp image file datetime
+        temp_image_time = datetime.fromtimestamp(os.path.getmtime(
+            '/tmp/nereid/%s/%d/'
+            'thumbnailw_120h_120m_n_resizew_100h_100m_n.png' %
+            (DB_NAME, file.id)
+        ), timezone('UTC'))
+        Transaction().commit()  # Commit to retain file
+
+        time.sleep(1)
+
+        # Access file again
+        with app.test_client() as c:
+            rv = c.get(
+                '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
+                'resize,w_100,h_100,m_n.png' % file.id
+            )
+            self.assertEqual(rv.status_code, 200)
+            img = Image.open(cStringIO.StringIO(rv.data))
+            # Assert if white
+            self.assertEqual(img.getpixel((0, 0)), (255, 255, 255))
+
+        # Assert if file is not modified.
+        self.assertEqual(
+            temp_image_time, datetime.fromtimestamp(os.path.getmtime(
                 '/tmp/nereid/%s/%d/'
                 'thumbnailw_120h_120m_n_resizew_100h_100m_n.png' %
                 (DB_NAME, file.id)
             ), timezone('UTC'))
-            Transaction().cursor.commit()  # Commit to retain file
+        )
 
-        time.sleep(1)
+        # Generate new image
+        img_file = BytesIO()
+        img = Image.new("RGB", (100, 100), "black")
+        img.save(img_file, 'png')
 
-        with Transaction().start(DB_NAME, USER, CONTEXT):
-            # Access file again
-            with app.test_client() as c:
-                rv = c.get(
-                    '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
-                    'resize,w_100,h_100,m_n.png' % file.id
-                )
-                self.assertEqual(rv.status_code, 200)
-                img = Image.open(cStringIO.StringIO(rv.data))
-                # Assert if white
-                self.assertEqual(img.getpixel((0, 0)), (255, 255, 255))
+        img_file.seek(0)
 
-            # Assert if file is not modified.
-            self.assertEqual(
-                temp_image_time, datetime.fromtimestamp(os.path.getmtime(
-                    '/tmp/nereid/%s/%d/'
-                    'thumbnailw_120h_120m_n_resizew_100h_100m_n.png' %
-                    (DB_NAME, file.id)
-                ), timezone('UTC'))
+        # Update image in same file
+        file = self.static_file_obj(file.id)
+        file.file_binary = img_file.read()
+        file.save()
+
+        app = self.get_app()
+
+        with app.test_client() as c:
+            rv = c.get(
+                '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
+                'resize,w_100,h_100,m_n.png' % file.id
             )
+            self.assertEqual(rv.status_code, 200)
+            img = Image.open(cStringIO.StringIO(rv.data))
+            # Assert if black
+            self.assertEqual(img.getpixel((0, 0)), (0, 0, 0))
 
-            # Generate new image
-            img_file = BytesIO()
-            img = Image.new("RGB", (100, 100), "black")
-            img.save(img_file, 'png')
-
-            img_file.seek(0)
-
-            # Update image in same file
-            file = self.static_file_obj(file.id)
-            file.file_binary = img_file.read()
-            file.save()
-
-            app = self.get_app()
-
-            with app.test_client() as c:
-                rv = c.get(
-                    '/static-file-transform/%d/thumbnail,w_120,h_120,m_n/'
-                    'resize,w_100,h_100,m_n.png' % file.id
-                )
-                self.assertEqual(rv.status_code, 200)
-                img = Image.open(cStringIO.StringIO(rv.data))
-                # Assert if black
-                self.assertEqual(img.getpixel((0, 0)), (0, 0, 0))
-
-            # Assert if image is updated
-            self.assertTrue(
-                temp_image_time < datetime.fromtimestamp(os.path.getmtime(
-                    '/tmp/nereid/%s/%d/'
-                    'thumbnailw_120h_120m_n_resizew_100h_100m_n.png' %
-                    (DB_NAME, file.id)
-                ), timezone('UTC'))
-            )
+        # Assert if image is updated
+        self.assertTrue(
+            temp_image_time < datetime.fromtimestamp(os.path.getmtime(
+                '/tmp/nereid/%s/%d/'
+                'thumbnailw_120h_120m_n_resizew_100h_100m_n.png' %
+                (DB_NAME, file.id)
+            ), timezone('UTC'))
+        )
 
 
 def suite():
