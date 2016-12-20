@@ -5,7 +5,7 @@ from io import BytesIO
 from datetime import datetime
 from urllib2 import unquote
 
-from PIL import Image
+from PIL import Image, ImageOps
 import pytz
 from nereid.helpers import send_file
 from nereid import url_for, route, abort
@@ -63,7 +63,7 @@ class TransformationCommand(object):
         """
         Returns a resize command. To understand more about the arguments see
         `pil documentation
-        <http://www.pythonware.com/library/pil/handbook/image.htm>`_
+        <http://pillow.readthedocs.io/en/3.4.x/reference/Image.html>`_
 
         :param width: Width of the image
         :param height: Height og the image
@@ -86,7 +86,7 @@ class TransformationCommand(object):
         """
         Returns a resize command. To understand more about the arguments see
         `pil documentation
-        <http://www.pythonware.com/library/pil/handbook/image.htm>`_
+        <http://pillow.readthedocs.io/en/3.4.x/reference/Image.html>`_
 
         :param width: Width of the image
         :param height: Height og the image
@@ -97,6 +97,29 @@ class TransformationCommand(object):
                       * a - ANTIALIAS (best quality)
         """
         arguments = ['resize']
+        arguments.append('w_%s' % width)
+        arguments.append('h_%s' % height)
+        if mode:
+            arguments.append('m_%s' % mode)
+
+        self.commands.append(','.join(arguments))
+        return self
+
+    def fit(self, width, height, mode='n'):
+        """
+        Returns a fit command. To understand more about the arguments see
+        `pil documentation
+        <http://pillow.readthedocs.io/en/3.4.x/reference/ImageOps.html>`_
+
+        :param width: Width of the image
+        :param height: Height og the image
+        :param mode: Filter to use
+                      * n - NEAREST
+                      * l - BILINEAR
+                      * c - BICUBIC
+                      * a - ANTIALIAS (best quality)
+        """
+        arguments = ['fit']
         arguments.append('w_%s' % width)
         arguments.append('h_%s' % height)
         if mode:
@@ -194,6 +217,21 @@ class NereidStaticFile:
                       * a - ANTIALIAS (best quality)
         """
         return image.resize((int(w), int(h)), FILTER_MAP[m])
+
+    @staticmethod
+    def fit(image, w=128, h=128, m='n'):
+        """
+        :param image: Image instance
+        :param w: width
+        :param h: height
+        :param m: mode for the resize operation
+                      * n - NEAREST
+                      * l - BILINEAR
+                      * c - BICUBIC
+                      * a - ANTIALIAS (best quality)
+        """
+        image = ImageOps.fit(image, (int(w), int(h)), FILTER_MAP[m])
+        return image
 
     def _transform_static_file(self, commands, extension, filename):
         """
