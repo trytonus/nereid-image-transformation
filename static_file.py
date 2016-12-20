@@ -187,7 +187,7 @@ class StaticFileTransformationCommand(TransformationCommand):
 class NereidStaticFile:
     __name__ = "nereid.static.file"
 
-    allowed_operations = ['resize', 'thumbnail']
+    allowed_operations = ['resize', 'thumbnail', 'fit']
 
     @staticmethod
     def thumbnail(image, w=128, h=128, m='n'):
